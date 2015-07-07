@@ -57,21 +57,29 @@ window.findNQueensSolution = function(n) {
   var solution = new Board({n:n});
   var matrix = solution.rows();
 
-  if(n === 2 || 3) return;
-
-  if(matrix.length%n === 1){ 
-    solution.togglePiece()
+  if(n === 2 || 3) return matrix;
+  if(n === 1){ 
+    solution.togglePiece(0,0)
+    return matrix;
   }
+  if(n === 0) return solution;
 
-  else {
-    //even
-  }
+    for (var row=0; row<matrix.length;row++){ 
+      for (var col=1; col<matrix[row].length; col++){ 
+        solution.togglePiece(row,col);
+        if(solution.hasAnyQueensConflicts()){ 
+          console.log(row,col)
+          solution.togglePiece(row,col);
+        }
+      }
+    }
+
 
 
 
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+  return matrix;
 };
 
 
