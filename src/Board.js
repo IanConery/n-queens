@@ -135,11 +135,34 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      var rows = this.rows();
+      var conflicts = 0;
+      var that = this;
+
+      var helper = function(row, col){
+        if(rows[row][col] === 1){ 
+          conflicts++;
+        }
+          row++;
+          col++;
+          if(that._isInBounds(row,col)){
+            helper(row, col);
+          }      
+      };
+      
+      helper(0, majorDiagonalColumnIndexAtFirstRow);
+      if(conflicts > 1){
+        return true;
+      }
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      var rows = this.rows();
+      for (var i=0; i<rows.length; i++){ 
+        if(this.hasMajorDiagonalConflictAt(i)) return true;
+      }
       return false; // fixme
     },
 
@@ -150,12 +173,36 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+      var rows = this.rows();
+      var conflicts = 0;
+      var that = this;
+
+      var helper = function(row, col){
+        if(rows[row][col] === 1){ 
+          conflicts++;
+        }      
+          row++;
+          col--;
+          if(that._isInBounds(row,col)){
+            helper(row, col);
+          }
+        
+      };
+      
+      helper(0, minorDiagonalColumnIndexAtFirstRow);
+      if(conflicts > 1){
+        return true;
+      }
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+       var rows = this.rows();
+      for (var i=0; i<rows.length;i++){ 
+        if(this.hasMinorDiagonalConflictAt(i)) return true;
+      }
+      return false; 
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/

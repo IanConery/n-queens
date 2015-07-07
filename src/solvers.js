@@ -15,62 +15,26 @@
 
 window.findNRooksSolution = function(n) {
   var solution = new Board({n:n}); //fixme
-  var matrix = solution.rows();
-  solution.counter = 0;
-  var rowCounter = 0;
-  var usedCols = [];
-  for(var i = 0; i < matrix[0].length; i++){
-    usedCols.push(i);
-    solution.togglePiece(matrix[rowCounter], i);
-    rowCounter++;
-    rookPlacer(matrix[rowCounter]);
-  }
-  var rookPlacer = function(row) {
-    for(var i=0; i<row.length; i++){ 
-      if(!_.contains(usedCols, i)){ 
-        solution.togglePiece(matrix[rowCounter],i);
-        usedCols.push(i);
-        rowCounter++;
-        if(rowCounter !== n){
-          rookPlacer(matrix[rowCounter]);
+  var matrix = solution.rows()
+  
+  var rookPlacer = function(row,col){ 
+    solution.togglePiece(row,col)
+    if(!solution.hasRowConflictAt(row) && !solution.hasColConflictAt(col)){ 
+      for (col=0; col<n; col++){ 
+        if(solution.get(row+1) !== undefined){
+          rookPlacer(row+1,col)
         }
       }
+    } else {
+      solution.togglePiece(row,col);
     }
-     
-
-
-
-
-      //   if (row === n-1 && col === n-1){
-      //     solution.counter += 1;
-      //     rookPlacer(matrix);
-      //   }
-      //   if (n >= solution.counter && solution.counter > 0) { 
-      //     if(matrix[row][col] === 1){ 
-      //       if(col === n-1){
-      //         solution.togglePiece(row,0);
-      //       }
-      //       solution.togglePiece(row,col);
-      //       solution.togglePiece(row,col+1)
-      //     }
-      //   }
-      //   if (solution.counter = 0){
-      //     solution.togglePiece(row,col);
-      //     if(solution.hasRowConflictAt(row) || solution.hasColConflictAt(col)){
-      //       solution.togglePiece(row,col);
-      //     }
-      //   }
-      // }
   }
-    //set the piece, check to see if it's valid, if it is a valid piece, then continue in that row and check next colvalue. When c === k-1 (in this case, 2), rookPlacer of the next array in the board. 
 
-    //after return solution add one to counter
-
-  rookPlacer(matrix);
+  rookPlacer(0,0)
 
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  console.log(counter);
+
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution))
   return matrix;
 };
 
@@ -78,8 +42,10 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
- 
+  var solutionCount = 1;
+  for (var i=1; i<=n; i++){ 
+    solutionCount *= i
+  }
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
@@ -88,7 +54,21 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution = new Board({n:n});
+  var matrix = solution.rows();
+
+  if(n === 2 || 3) return;
+
+  if(matrix.length%n === 1){ 
+    solution.togglePiece()
+  }
+
+  else {
+    //even
+  }
+
+
+
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
