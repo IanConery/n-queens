@@ -16,18 +16,27 @@
 window.findNRooksSolution = function(n) {
   var solution = new Board({n:n}); //fixme
   var matrix = solution.rows();
-  var counter = 0;
+  solution.counter = 0;
   var rookPlacer = function(matrix) {
-      //base case
     for (var row=0; row<matrix.length; row++){ 
       for(var col=0; col<matrix[row].length; col++){
         if (row === n-1 && col === n-1){
-          counter += 1;
-          //rookPlacer();
+          solution.counter += 1;
+          rookPlacer(matrix);
         }
-        solution.togglePiece(row,col);
-        if(solution.hasRowConflictAt(row) || solution.hasColConflictAt(col)){
+        if (n >= solution.counter && solution.counter > 0) { 
+          if(matrix[row][col] === 1){ 
+            if(col === n-1){
+              solution.togglePiece(row,0);
+            }
+            solution.togglePiece(row,col+1)
+          }
+        }
+        if (solution.counter = 0){
           solution.togglePiece(row,col);
+          if(solution.hasRowConflictAt(row) || solution.hasColConflictAt(col)){
+            solution.togglePiece(row,col);
+          }
         }
       }
     }
