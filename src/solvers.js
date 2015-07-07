@@ -17,29 +17,50 @@ window.findNRooksSolution = function(n) {
   var solution = new Board({n:n}); //fixme
   var matrix = solution.rows();
   solution.counter = 0;
-  var rookPlacer = function(matrix) {
-    for (var row=0; row<matrix.length; row++){ 
-      for(var col=0; col<matrix[row].length; col++){
-        if (row === n-1 && col === n-1){
-          solution.counter += 1;
-          rookPlacer(matrix);
-        }
-        if (n >= solution.counter && solution.counter > 0) { 
-          if(matrix[row][col] === 1){ 
-            if(col === n-1){
-              solution.togglePiece(row,0);
-            }
-            solution.togglePiece(row,col+1)
-          }
-        }
-        if (solution.counter = 0){
-          solution.togglePiece(row,col);
-          if(solution.hasRowConflictAt(row) || solution.hasColConflictAt(col)){
-            solution.togglePiece(row,col);
-          }
+  var rowCounter = 0;
+  var usedCols = [];
+  for(var i = 0; i < matrix[0].length; i++){
+    usedCols.push(i);
+    solution.togglePiece(matrix[rowCounter], i);
+    rowCounter++;
+    rookPlacer(matrix[rowCounter]);
+  }
+  var rookPlacer = function(row) {
+    for(var i=0; i<row.length; i++){ 
+      if(!_.contains(usedCols, i)){ 
+        solution.togglePiece(matrix[rowCounter],i);
+        usedCols.push(i);
+        rowCounter++;
+        if(rowCounter !== n){
+          rookPlacer(matrix[rowCounter]);
         }
       }
     }
+     
+
+
+
+
+      //   if (row === n-1 && col === n-1){
+      //     solution.counter += 1;
+      //     rookPlacer(matrix);
+      //   }
+      //   if (n >= solution.counter && solution.counter > 0) { 
+      //     if(matrix[row][col] === 1){ 
+      //       if(col === n-1){
+      //         solution.togglePiece(row,0);
+      //       }
+      //       solution.togglePiece(row,col);
+      //       solution.togglePiece(row,col+1)
+      //     }
+      //   }
+      //   if (solution.counter = 0){
+      //     solution.togglePiece(row,col);
+      //     if(solution.hasRowConflictAt(row) || solution.hasColConflictAt(col)){
+      //       solution.togglePiece(row,col);
+      //     }
+      //   }
+      // }
   }
     //set the piece, check to see if it's valid, if it is a valid piece, then continue in that row and check next colvalue. When c === k-1 (in this case, 2), rookPlacer of the next array in the board. 
 
