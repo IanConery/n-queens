@@ -13,28 +13,35 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
-window.findNRooksSolution = function(k) {
-  var solution = new Board({n: k}); //fixme
-  var rows = solution.rows();
-  var rookPlacer = function(rows, col) { 
-    for (var i=0; i<rows.length; i++){ 
-      var singleRow = rows[i];
-        for(var c=0; c<singleRow.length; c++){ 
-          var singleCol = col || singleRow[c];
-          if (!this.hasColConflictAt(singleCol) && !this.hasRowConflictAt(singleRow)){
-            this.togglePiece(i,c);
-            rookPlacer(i, c+1)
-          } if (!this.hasColConflictAt(singleCol) && this.hasRowConflictAt(singleRow)){ 
-            rookPlacer(i+1,c)
-          }
+window.findNRooksSolution = function(n) {
+  var solution = new Board({n:n}); //fixme
+  var matrix = solution.rows();
+  var counter = 0;
+  var rookPlacer = function(matrix) {
+      //base case
+    for (var row=0; row<matrix.length; row++){ 
+      for(var col=0; col<matrix[row].length; col++){
+        if (row === n-1 && col === n-1){
+          counter += 1;
+          //rookPlacer();
         }
-
+        solution.togglePiece(row,col);
+        if(solution.hasRowConflictAt(row) || solution.hasColConflictAt(col)){
+          solution.togglePiece(row,col);
+        }
+      }
+    }
   }
+    //set the piece, check to see if it's valid, if it is a valid piece, then continue in that row and check next colvalue. When c === k-1 (in this case, 2), rookPlacer of the next array in the board. 
 
-  }
+    //after return solution add one to counter
 
-  console.log('Single solution for ' + k + ' rooks:', JSON.stringify(solution));
-  return solution;
+  rookPlacer(matrix);
+
+
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  console.log(counter);
+  return matrix;
 };
 
 
@@ -42,7 +49,7 @@ window.findNRooksSolution = function(k) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   var solutionCount = undefined; //fixme
-
+ 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
